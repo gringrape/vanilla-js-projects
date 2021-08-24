@@ -11,5 +11,8 @@ module.exports = {
     ecmaVersion: 12,
   },
   rules: {
+    'import/extensions': 'off',
+    'import/no-cycle': 'off',
+    'no-underscore-dangle': 'off',
   },
 };
