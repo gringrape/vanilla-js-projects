@@ -1,7 +1,49 @@
+import { fromEvent } from './rx.js';
+
 const root = document.getElementById('root');
 
-const heading = document.createElement('h1');
+const element = document.createElement('div');
 
-heading.textContent = 'Hello, World!';
+let number = 50;
+const plusNumber = () => {
+  number += 1;
+};
 
-root.appendChild(heading);
+const view = () => `
+  <h1>Counter</h1>
+  <input id="simple-input" />
+  <p>${number}</p>
+  <p>
+    <button id="plus-button">plus</button>
+    <button>minus</button>
+  </p>
+  `;
+
+function bind({ update }) {
+  const button = document.getElementById('plus-button');
+  const input = document.getElementById('simple-input');
+
+  const clicks = fromEvent(button, 'click');
+  const inputs = fromEvent(input, 'input');
+
+  clicks.subscribe(() => {
+    plusNumber();
+    update();
+  });
+
+  inputs
+    .map(({ target: { value } }) => value)
+    .subscribe((value) => {
+      console.log(value);
+    });
+}
+
+const update = () => {
+  element.innerHTML = '';
+  element.innerHTML = view();
+  bind({ update });
+};
+
+root.appendChild(element);
+
+update();
